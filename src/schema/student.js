@@ -7,11 +7,11 @@ var PersonalDetails = new Schema({
     middleName: {type: String},
     lastName: {type: String, required:true},
     email: {type: String, required:true},
-    contactNo: {type: String, required:true, max:10},
-    address: {type: String, required:true},
-    fathersName: {type: String, required:true},
-    mothersName: {type: String, required:true},
-    dateOfBirth:{type:Date, required:true}
+    contactNo: {type: String, max:10},
+    address: {type: String },
+    fathersName: {type: String },
+    mothersName: {type: String},
+    dateOfBirth:{type: Date }
 
 })
 
@@ -38,14 +38,15 @@ var CollegeDetailsSchema = new Schema({
 var AcedemicDetailsSchema = new Schema({
     class10: ClassDetailsSchema,
     class12: ClassDetailsSchema,
-    college: CollegeDetailsSechema
-
+    college: CollegeDetailsSchema
 })
 
 
 var StudentSchema = new Schema({
-    userId: {type: String, required:true},
-    password: {type: String, required:true},
+    userId: {type: String, required:true, unique: true, index: true},
+    password: {type: String },
+    isVerified: {type: Boolean, required: true, default: false},
+    resetPasswordToken: {type: String},
     personalDetails: PersonalDetails,
     acedemicDetails: AcedemicDetailsSchema
 })

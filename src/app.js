@@ -25,4 +25,7 @@ mongoose.connection.on("connected", (err, res) => {
 const authRouter = require('./routes/auth.routes');
 app.use('/auth', authRouter);
 
+const adminRouter = require('./routes/admin.routes')
+app.use('/admin',adminRouter);
+
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

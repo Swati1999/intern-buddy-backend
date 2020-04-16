@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 const Admin = require('../schema/admin')
+const Student = require('../schema/student')
 const { generateToken, authenticateJWT } = require('../jwt')
 
 
@@ -45,6 +46,11 @@ router.post('/login', loginBodySchema, (req, res) => {
     if (userType === 'admin') {
         Admin.findOne({userId, password}).then(user => 
             res.status(200).json({token: generateToken({userId: user.userId, role: 'admin'})})
+        ).catch(err => res.status(401).json({error: "Invalid UserId or Password"}))
+    }
+    else {
+        Student.findOne({userId, password}).then(user => 
+            res.status(200).json({token: generateToken({userId: user.userId, role: 'student'})})
         ).catch(err => res.status(401).json({error: "Invalid UserId or Password"}))
     }
 })
