@@ -3,11 +3,20 @@ const HttpError = require("../schema/http-error");
 const {validationResult} = require('express-validator');
 
 let DUMMY_ORGANIZATIONS = [{
-    id: 'o1',
-    name: 'cetpa',
-    city: 'Delhi',
-    paid: 'yes',
-    amount: 10000
+
+    id: "o1",
+    organizationName: "Air India",
+    organizationWebsite : "www.airindia.com",
+    supervisorName: "Ritesh Kumar",
+    supervisorEmail : "ritesh1234@gmail.com",
+    supervisorContactNo : "9876987699",
+    organizationAddress : "krishna nagar",
+    organizationCity : "Delhi",
+    stipend : true,
+    stipendAmount: 10000,
+    trainingPaid: false,
+    trainingAmount: 0
+
 }];
 
 //get all organizations
@@ -36,14 +45,21 @@ const createOrganization = (req, res, next) => {
         throw new HttpError('Invalids inputs passed, please check your data.',422);
     }
 
-    const { name, city, paid ,amount }  = req.body;
+    const { organizationName, organizationWebsite ,supervisorName, supervisorEmail, supervisorContactNo, organizationAddress ,organizationCity ,stipend, stipendAmount, trainingPaid, trainingAmount}  = req.body;
 
     const createdOrganization ={
         id: uuid(),
-        name,
-        city,
-        paid,
-        amount
+        organizationName,
+        organizationWebsite,
+        supervisorName, 
+        supervisorEmail, 
+        supervisorContactNo, 
+        organizationAddress, 
+        organizationCity, 
+        stipend, stipendAmount,
+        trainingPaid, 
+        trainingAmount
+       
     };
     DUMMY_ORGANIZATIONS.push(createdOrganization);
     res.status(201).json({organization: createdOrganization});
@@ -56,15 +72,22 @@ const updateOrganization = (req, res, next) =>{
         throw new HttpError('Invalids inputs passed, please check your data.',422);
     }
 
-    const { city, paid ,amount }  = req.body;
+    const { organizationWebsite ,supervisorName, supervisorEmail, supervisorContactNo, organizationAddress ,organizationCity ,stipend, stipendAmount, trainingPaid, trainingAmount }  = req.body;
     const organizationId = req.params.oid;
 
     const updatedOrganization = {...DUMMY_ORGANIZATIONS.find(o=> o.id===organizationId )};
     const organizationIndex = DUMMY_ORGANIZATIONS.findIndex(o=> o.id===organizationId );
 
-    updatedOrganization.city = city;
-    updatedOrganization.paid = paid;
-    updatedOrganization.amount = amount;
+    updatedOrganization.organizationWebsite = organizationWebsite;
+    updatedOrganization.supervisorName = supervisorName;
+    updatedOrganization.supervisorEmail = supervisorEmail;
+    updatedOrganization.supervisorContactNo = supervisorContactNo;
+    updatedOrganization.organizationAddress = organizationAddress;
+    updatedOrganization.organizationCity = organizationCity;
+    updatedOrganization.stipend = stipend;
+    updatedOrganization.stipendAmount = stipendAmount;
+    updatedOrganization.trainingPaid = trainingPaid;
+    updatedOrganization.trainingAmount = trainingAmount;
 
     DUMMY_ORGANIZATIONS[organizationIndex] = updatedOrganization;
     res.status(200).json({organization: updatedOrganization});

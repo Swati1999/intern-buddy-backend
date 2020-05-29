@@ -7,30 +7,22 @@ router.get('/',organizationController.getOrganizations);
 
 router.get('/:oid',organizationController.getOrganizationById);
 
-router.post(
-    '/',
-    [
-        check('name')
-            .not()
-            .isEmpty(),
-        check('city')
-            .isLength({min: 3}),
-        check('paid')
-            .not().
-            isEmpty()
-    ],
-    organizationController.createOrganization);
+const addOrganizationSchema = [
 
-router.patch(
-    '/:oid',
-    [
-        check('city')
-            .isLength({min: 3}),
-        check('paid')
-            .not().
-            isEmpty()
-    ],
-     organizationController.updateOrganization);
+    check('organizationName').isString().notEmpty(),
+    check('organizationWebsite').isString().notEmpty(),
+    check('supervisorName').isString().notEmpty(),
+    check('supervisorEmail').isString().isEmail().notEmpty()
+
+];
+router.post('/',addOrganizationSchema,organizationController.createOrganization);
+
+const updateOrganizationSchema = [
+    check('organizationWebsite').isString().notEmpty(),
+    check('supervisorName').isString().isLength({min : 3}).notEmpty(),
+    check('supervisorEmail').isString().isEmail().notEmpty()
+]
+router.patch('/:oid', updateOrganizationSchema, organizationController.updateOrganization);
 
 router.delete('/:oid', organizationController.deleteOrganization);
 
