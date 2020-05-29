@@ -27,13 +27,14 @@ mongoose.connection.on("connected", (err, res) => {
 const organizationRouter = require('./routes/organization.routes');
 app.use('/api/organizations',organizationRouter);
 
-
-
 const authRouter = require('./routes/auth.routes');
 app.use('/auth', authRouter);
 
 const adminRouter = require('./routes/admin.routes')
-app.use('/admin',adminRouter);
+app.use('/api/admins',adminRouter);
+
+const studentRouter = require('./routes/student.routes')
+app.use('/api/students',studentRouter);
 
 app.use((req, res, next)=>{
   const error = new HttpError('Could not find this route', 404);

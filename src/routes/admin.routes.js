@@ -3,6 +3,7 @@ const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 const Student = require('../schema/student')
 const { authenticateJWT } = require('../jwt')
+const adminController = require('../controllers/admin-controller');
 
 const addStudentSchema = [
     check('userId').isString().notEmpty(),
@@ -24,4 +25,18 @@ router.post('/add/student',authenticateJWT, addStudentSchema, (req,res)=>{
       .catch(err => res.status(422).json({errors: err.message}))
 }
 )
+
+router.get('/',adminController.getAdmins);
+
+router.get('/:aid',adminController.getAdminById);
+
+const updateAdminSchema = [ 
+    check('email').isString().isEmail().notEmpty(),
+    check('contactNo').isLength({min :10}),
+    check('password').isLength({ min : 4 })
+]
+router.patch('/:aid', updateAdminSchema  , adminController.updateAdmin);
+
+router.delete('/:aid', adminController.deleteAdmin);
+
 module.exports = router
