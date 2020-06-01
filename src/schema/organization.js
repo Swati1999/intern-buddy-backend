@@ -2,9 +2,9 @@ var mongoose = require('mongoose')
 
 var Schema = mongoose.Schema
 
-var AdminSchema = new Schema({
+var OrganizationSchema = new Schema({
 
-    id:{type: String, required: true, unique: true, index: true},
+    //id:{type: String, required: true, unique: true, index: true},
     organizationName: {type: String, required:true},
     organizationWebsite : {type: String },
     supervisorName: {type: String, required:true},

@@ -1,6 +1,7 @@
 const uuid = require('uuid/v4');
 const HttpError = require("../schema/http-error");
 const {validationResult} = require('express-validator');
+const Organization = require('../schema/organization')
 
 let DUMMY_ORGANIZATIONS = [{
 
@@ -20,26 +21,43 @@ let DUMMY_ORGANIZATIONS = [{
 }];
 
 //get all organizations
-const getOrganizations = (req, res, next) =>{
-    res.json({organizations: DUMMY_ORGANIZATIONS });
+const getOrganizations = async(req, res, next) =>{
+
+    let organization;
+    try{
+        organization = await Organization.find();
+
+    }catch(err){
+        const error = new HttpError('Something went wrong, could not find an organization.',500);
+        return next(error); 
+    }
+
+    res.json({organization});
 }
 
 //view organization by ID
-const getOrganizationById = (req, res,next) =>{
+const getOrganizationById = async(req, res,next) =>{
     const organizationId = req.params.oid;
-    const organization = DUMMY_ORGANIZATIONS.find(o=>{
-        return o.id === organizationId;
-    });
+
+    let organization;
+    try{
+        organization = await Organization.findById(organizationId);
+
+    }catch(err){
+        const error = new HttpError('Something went wrong, could not find an organization.',500);
+        return next(error); 
+    }
     if(!organization){
-        throw new HttpError('could not find a organization for the provide id',404);
+        const error= new HttpError('could not find an organization for the provide id',404);
+        return next(error)
     }
 
-   res.json({organization});
+    res.json({ organization: organization.toObject({ getters: true }) }); // => { organization } => { organization: organization }
     
 };
 
 //creating organization
-const createOrganization = (req, res, next) => {
+const createOrganization = async(req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         throw new HttpError('Invalids inputs passed, please check your data.',422);
@@ -47,26 +65,37 @@ const createOrganization = (req, res, next) => {
 
     const { organizationName, organizationWebsite ,supervisorName, supervisorEmail, supervisorContactNo, organizationAddress ,organizationCity ,stipend, stipendAmount, trainingPaid, trainingAmount}  = req.body;
 
-    const createdOrganization ={
-        id: uuid(),
+    const createdOrganization = new Organization({
+       // id: uuid(),
         organizationName,
         organizationWebsite,
         supervisorName, 
         supervisorEmail, 
         supervisorContactNo, 
-        organizationAddress, 
+        organizationAddress,
         organizationCity, 
-        stipend, stipendAmount,
+        stipend, 
+        stipendAmount,
         trainingPaid, 
         trainingAmount
-       
-    };
-    DUMMY_ORGANIZATIONS.push(createdOrganization);
+    });
+
+    try {
+        await createdOrganization.save();
+      } catch (err) {
+
+        console.log(err)
+        const error = new HttpError(
+          'Creating organization failed, please try again.',
+          500
+        );
+        return next(error);
+      }
     res.status(201).json({organization: createdOrganization});
 };
 
 //Update organization by ID
-const updateOrganization = (req, res, next) =>{
+const updateOrganization = async(req, res, next) =>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         throw new HttpError('Invalids inputs passed, please check your data.',422);
@@ -75,32 +104,56 @@ const updateOrganization = (req, res, next) =>{
     const { organizationWebsite ,supervisorName, supervisorEmail, supervisorContactNo, organizationAddress ,organizationCity ,stipend, stipendAmount, trainingPaid, trainingAmount }  = req.body;
     const organizationId = req.params.oid;
 
-    const updatedOrganization = {...DUMMY_ORGANIZATIONS.find(o=> o.id===organizationId )};
-    const organizationIndex = DUMMY_ORGANIZATIONS.findIndex(o=> o.id===organizationId );
+    let organization;
+    try{
+        organization = await Organization.findById(organizationId);
+    }catch(err){
+        const error = new HttpError('Something went wrong, please check again');
+        return next(error);
+    }
+    organization.organizationWebsite = organizationWebsite;
+    organization.supervisorName = supervisorName;
+    organization.supervisorEmail = supervisorEmail;
+    organization.supervisorContactNo = supervisorContactNo;
+    organization.organizationAddress = organizationAddress;
+    organization.organizationCity = organizationCity;
+    organization.stipend = stipend;
+    organization.stipendAmount = stipendAmount;
+    organization.trainingPaid = trainingPaid;
+    organization.trainingAmount = trainingAmount;
 
-    updatedOrganization.organizationWebsite = organizationWebsite;
-    updatedOrganization.supervisorName = supervisorName;
-    updatedOrganization.supervisorEmail = supervisorEmail;
-    updatedOrganization.supervisorContactNo = supervisorContactNo;
-    updatedOrganization.organizationAddress = organizationAddress;
-    updatedOrganization.organizationCity = organizationCity;
-    updatedOrganization.stipend = stipend;
-    updatedOrganization.stipendAmount = stipendAmount;
-    updatedOrganization.trainingPaid = trainingPaid;
-    updatedOrganization.trainingAmount = trainingAmount;
-
-    DUMMY_ORGANIZATIONS[organizationIndex] = updatedOrganization;
-    res.status(200).json({organization: updatedOrganization});
+    try {
+        await organization.save();
+      } catch (err) {
+        const error = new HttpError(
+          'Something went wrong, could not update organization.',
+          500
+        );
+        return next(error);
+      }
+    
+      res.status(200).json({ organization: organization.toObject({ getters: true }) });
 
 };
 
 //delete organization by ID
-const deleteOrganization = (req, res, next) =>{
+const deleteOrganization = async(req, res, next) =>{
     const organizationId = req.params.oid;
-    if(!DUMMY_ORGANIZATIONS.find(o =>o.id==organizationId)){
-        throw new HttpError('Could not find a organization for that id', 404);
+    let organization;
+    try {
+        organization = await Organization.findById(organizationId);
+    } catch (err) {
+        const error = new HttpError( 'Something went wrong, could not delete organization.',500);
+        return next(error);
     }
-    DUMMY_ORGANIZATIONS = DUMMY_ORGANIZATIONS.filter(o => o.id !== organizationId);
+
+    try {
+        await organization.remove();
+    } catch (err) {
+        const error = new HttpError('Something went wrong, could not delete organization.',500);
+        return next(error);
+    }
+
     res.status(200).json({ message: 'Deleted organization'})
 };
 
