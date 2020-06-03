@@ -2,6 +2,7 @@ const uuid = require('uuid/v4');
 const HttpError = require("../schema/http-error");
 const {validationResult} = require('express-validator');
 const Organization = require('../schema/organization')
+const { ObjectId } = require('mongoose').Types
 
 let DUMMY_ORGANIZATIONS = [{
 
@@ -38,13 +39,12 @@ const getOrganizations = async(req, res, next) =>{
 //view organization by ID
 const getOrganizationById = async(req, res,next) =>{
     const organizationId = req.params.oid;
-
     let organization;
     try{
         organization = await Organization.findById(organizationId);
 
     }catch(err){
-        const error = new HttpError('Something went wrong, could not find an organization.',500);
+       const error = new HttpError('Something went wrong, could not find an organization.',500);
         return next(error); 
     }
     if(!organization){
