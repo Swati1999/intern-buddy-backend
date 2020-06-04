@@ -1,6 +1,7 @@
 const uuid = require('uuid/v4');
 const HttpError = require("../schema/http-error");
 const {validationResult} = require('express-validator');
+const Admin = require('../schema/admin')
 
 let DUMMY_ADMINS = [{
     id: 'a1',
@@ -13,8 +14,17 @@ let DUMMY_ADMINS = [{
 }];
 
 //get all admins
-const getAdmins = (req, res, next) =>{
-    res.json({admins: DUMMY_ADMINS });
+const getAdmins = async(req, res, next) =>{
+    let admin;
+    try{
+        admin = await Admin.find();
+
+    }catch(err){
+        const error = new HttpError('Something went wrong, could not find an admin.',500);
+        return next(error); 
+    }
+
+    res.json({admin});
 }
 
 //view admins by ID

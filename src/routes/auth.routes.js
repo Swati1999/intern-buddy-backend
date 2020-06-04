@@ -5,29 +5,29 @@ const Student = require('../schema/student')
 const { generateToken, authenticateJWT } = require('../jwt')
 
 
-const registrationBodySchema = [
-   check('userId').isString().notEmpty(),
-   check('firstName').isString().notEmpty(),
-   check('lastName').isString().notEmpty(),
-   check('email').isString().isEmail().notEmpty(),
-   check('contactNo').isString().isNumeric().notEmpty(),
-   check('password').isString().notEmpty()
-]
+// const registrationBodySchema = [
+//    check('userId').isString().notEmpty(),
+//    check('firstName').isString().notEmpty(),
+//    check('lastName').isString().notEmpty(),
+//    check('email').isString().isEmail().notEmpty(),
+//    check('contactNo').isString().isNumeric().notEmpty(),
+//    check('password').isString().notEmpty()
+// ]
 
 
-router.post('/register', registrationBodySchema, (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+// router.post('/register', registrationBodySchema, (req, res) => {
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       return res.status(422).json({ errors: errors.array() });
+//     }
 
-    const { userId, firstName, middleName, lastName, email, contactNo, password } = req.body
-    Admin.create({
-        userId, firstName, middleName, lastName, email, contactNo, password 
-    })
-    .then(user => res.send(user))
-    .catch(err => res.status(422).json({errors: err.message}))
-})
+//     const { userId, firstName, middleName, lastName, email, contactNo, password } = req.body
+//     Admin.create({
+//         userId, firstName, middleName, lastName, email, contactNo, password 
+//     })
+//     .then(user => res.send(user))
+//     .catch(err => res.status(422).json({errors: err.message}))
+// })
 
 const loginBodySchema = [
     check('userId').isString().notEmpty(),
