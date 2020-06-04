@@ -23,11 +23,11 @@ const updateStudentPersonalSchema = [
 router.patch('/:sid',updateStudentPersonalSchema, studentController.updateStudentPersonalDetails);
 
 const updateStudentAcademicSchema = [
-    check('CGPA').isNumeric,
-    check('class10percentage').isNumeric,
-    check('class12percentage').isNumeric
+    check('CGPA').notEmpty(),
+    check('class10percentage').notEmpty(),
+    check('class12percentage').notEmpty()
 ]
-router.patch('/up/:sid', updateStudentAcademicSchema, studentController.updateStudentPersonalDetails);
+router.patch('/up/:sid', updateStudentAcademicSchema, studentController.updateStudentAcademicDetails);
 
 router.delete('/:sid', studentController.deleteStudent);
 

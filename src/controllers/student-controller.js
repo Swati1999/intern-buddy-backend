@@ -117,7 +117,7 @@ const updateStudentPersonalDetails = async(req, res, next) =>{
     const studentId = req.params.sid;
     let student;
     try{
-        student = await Student.findById(studentId);console.log("hello")
+        student = await Student.findById(studentId);
     }catch(err){
         const error = new HttpError('Something went wrong, please check again');
         return next(error);
