@@ -68,7 +68,7 @@ const createStudent = async(req, res, next) => {
         throw new HttpError('Invalids inputs passed, please check your data.',422);
     }
 
-    const {password, firstName, lastName,email, contactNo }  = req.body;
+    const {password, firstName, lastName,email, contactNo, userId }  = req.body;
 
     const createdStudent = new Student({
         password,
@@ -76,6 +76,7 @@ const createStudent = async(req, res, next) => {
         lastName,
         email,
         contactNo,
+        userId
     });
 
     try {

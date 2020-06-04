@@ -43,6 +43,7 @@ router.post('/login', loginBodySchema, (req, res) => {
     }    
 
     const {userId, password, userType} = req.body;
+
     if (userType === 'admin') {
         Admin.findOne({userId, password}).then(user => 
             res.status(200).json({token: generateToken({userId: user.userId, role: 'admin'}), user})
@@ -50,8 +51,9 @@ router.post('/login', loginBodySchema, (req, res) => {
     }
     else {
         Student.findOne({userId, password}).then(user => 
-            res.status(200).json({token: generateToken({userId: user.userId, role: 'student'})})
+            res.status(200).json({token: generateToken({userId: user.userId, role: 'student'}), user})
         ).catch(err => res.status(401).json({error: "Invalid UserId or Password"}))
+       
     }
 })
 

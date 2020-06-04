@@ -8,6 +8,7 @@ var StudentSchema = new Schema({
     resetPasswordToken: {type: String},
 
     //personal details
+    userId: {type: String, required: true, unique: true},
     firstName: {type: String, required:true},
     middleName: {type: String},
     lastName: {type: String, required:true, unique: true},
