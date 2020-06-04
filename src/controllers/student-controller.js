@@ -30,8 +30,14 @@ let DUMMY_STUDENTS = [{
 }];
 
 //get all students
-const getStudents = (req, res, next) =>{
-    res.json({students: DUMMY_STUDENTS });
+const getStudents = async (req, res, next) =>{
+    try {
+        students = await Student.find()
+        res.json({students})
+    }
+    catch(err) {
+        console.log(err)
+    }
 }
 
 //view students by ID
@@ -62,35 +68,14 @@ const createStudent = async(req, res, next) => {
         throw new HttpError('Invalids inputs passed, please check your data.',422);
     }
 
-    const {password,isVerified,resetPasswordToken,
-            firstName,middleName,lastName,email,contactNo,address,fathersName,mothersName,
-            class10percentage,class12percentage,gpaSem1,gpaSem2,gpaSem3,gpaSem4, gpaSem5, gpaSem6, CGPA }  = req.body;
+    const {password, firstName, lastName,email, contactNo }  = req.body;
 
     const createdStudent = new Student({
-
         password,
-        isVerified,
-        resetPasswordToken,
-
         firstName,
-        middleName,
         lastName,
         email,
         contactNo,
-        address,
-        fathersName,
-        mothersName,
-
-        class10percentage,
-        class12percentage,
-        gpaSem1,
-        gpaSem2,
-        gpaSem3,
-        gpaSem4,
-        gpaSem5,
-        gpaSem6,
-        CGPA
-        
     });
 
     try {

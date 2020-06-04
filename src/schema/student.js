@@ -10,7 +10,7 @@ var StudentSchema = new Schema({
     //personal details
     firstName: {type: String, required:true},
     middleName: {type: String},
-    lastName: {type: String, required:true},
+    lastName: {type: String, required:true, unique: true},
     email: {type: String, required:true},
     contactNo: {type: String, max:10},
     address: {type: String },
@@ -18,8 +18,8 @@ var StudentSchema = new Schema({
     mothersName: {type: String},
 
     //Acedemic details
-    class10percentage: {type: Number, required: true},
-    class12percentage: {type: Number, required: true},
+    class10percentage: {type: Number},
+    class12percentage: {type: Number},
     gpaSem1: {type: Number, default:0},
     gpaSem2: {type: Number, default:0},
     gpaSem3: {type: Number, default:0},
