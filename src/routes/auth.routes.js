@@ -21,6 +21,7 @@ router.post('/register', registrationBodySchema, (req, res) => {
       return res.status(422).json({ errors: errors.array() });
     }
 
+
     const { userId, firstName, middleName, lastName, email, contactNo, password } = req.body
     Admin.create({
         userId, firstName, middleName, lastName, email, contactNo, password 

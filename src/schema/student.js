@@ -11,7 +11,7 @@ var StudentSchema = new Schema({
     userId: {type: String, required: true, unique: true},
     firstName: {type: String, required:true},
     middleName: {type: String},
-    lastName: {type: String, required:true, unique: true},
+    lastName: {type: String, required:true},
     email: {type: String, required:true},
     contactNo: {type: String, max:10},
     address: {type: String },
